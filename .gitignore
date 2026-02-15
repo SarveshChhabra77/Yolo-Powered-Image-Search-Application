@@ -12,3 +12,6 @@ __pycache__/
 *.json
 processed/
 runs/
+
+uploaded_images/
+processed/
