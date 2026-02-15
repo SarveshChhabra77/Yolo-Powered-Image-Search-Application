@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-
+import tempfile
 
 def ensure_processed_dir(raw_path):
     raw_path = Path(raw_path)
@@ -55,4 +55,15 @@ def get_unique_classes_counts(metadata):
         
         
     
-    
+
+
+UPLOAD_DIR = Path("uploaded_images")
+UPLOAD_DIR.mkdir(exist_ok=True)
+
+def save_uploaded_files(files):
+    for file in files:
+        save_path = UPLOAD_DIR / file.name
+        with open(save_path, "wb") as f:
+            f.write(file.getbuffer())
+
+    return UPLOAD_DIR

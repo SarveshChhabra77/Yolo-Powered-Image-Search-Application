@@ -8,7 +8,7 @@ import json
 sys.path.append(str(Path(__file__).parent))
 
 from src.inference import YOLOv11Inference
-from src.utils import save_metadata,load_metadata,get_unique_classes_counts
+from src.utils import save_metadata,load_metadata,get_unique_classes_counts,save_uploaded_files
 from PIL import Image,ImageDraw,ImageFont
 import base64
 
@@ -117,7 +117,11 @@ if option=='Process new images':
         col1,col2 = st.columns(2)
         
         with col1:
-            img_dir = st.text_input('Image directory path',placeholder='path/to/images')
+            uploaded_files = st.file_uploader(
+                                        "Upload images",
+                                        type=["jpg", "jpeg", "png"],
+                                        accept_multiple_files=True
+                                    )
         with col2:
             model_path = st.selectbox('Model weights path',[
                                                         "yolo11n.pt",
@@ -129,12 +133,13 @@ if option=='Process new images':
             
         if st.button('Start Inference'):
             
-            if img_dir:
+            if uploaded_files:
                 try:
                     with st.spinner('Running object detection ...'):
+                        temp_dir = save_uploaded_files(uploaded_files)
                         inferencer = YOLOv11Inference(model_path)
-                        metadata = inferencer.process_directory(img_dir)
-                        metadata_path = save_metadata(metadata,img_dir)
+                        metadata = inferencer.process_directory(temp_dir)
+                        metadata_path = save_metadata(metadata,temp_dir)
                         st.success(f'Processed {len(metadata)} images. Metadata saved to : ')
                         st.code(str(metadata_path))
                         st.session_state.metadata = metadata
