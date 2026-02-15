@@ -1,1 +1,14 @@
 yolo_image_search
+# python
+__pycache__/
+*.pyc
+
+# models
+*.pt
+*.pth
+*.onnx
+
+# metadata / data
+*.json
+processed/
+runs/
